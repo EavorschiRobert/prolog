@@ -1,31 +1,31 @@
-%Rimuovi ultimi 3 elementi
+%Remove last 3 elements
 removeLasts([_, _, _], []).
 removeLasts([H | T], [H | T1]):-
   removeLasts(T, T1).
 
-%Rimuovi i primi 3 e gli ultimi 3
+%Remove last and first 3
 removeFirst([_,_,_| T], T).
 removeFirstAndLast([_, _, _ | T], Z):-
   removeLasts(T, Z).
 
-%last(Item, List) vero se Item e ultimo di list
+%last(Item, List) true if Item is the last item in list
 last([X], X).
 last([_| T], X):-
   last(T, X).
 
-%penultimo(Item, List) vero se Item e il penultimo elemento di List
+%penultimo(Item, List) 
 penultimo(X, [X, _]).
 penultimo(X, [_ | T]):-
   penultimo(X, T).
 
-%element_at(Item, List, Index) vero se Item e in posizione Index di List
+%element_at(Item, List, Index) true if Item is in position Index of List
 element_at(X, [X], 0).
 element_at(X, [X|_], 0).
 element_at(X, [_ | T], I):-
   element_at(X, T, I1),
   I is I1 + 1.
 
-%len(Length, List) vero se Length e la dimensione di List
+%len(Length, List) true if Length is the lenght of List
 len(1, [_]).
 len(X, [_ | T]):-
   len(X1, T),
