@@ -48,3 +48,14 @@ permutation([X | T], P):-
 append(X, [], [X]).
 append(X, [H|T], [H | T2]):-
   append(X, T, T2).
+
+%len(List, Size) is true if Size is the size of List
+
+leng([], 0).
+leng([_|T], X):-
+  leng(T, X1),
+  X is 1 + X1.
+%not(P) true if P is false
+not(P):-
+  P, !, fail;
+  true.

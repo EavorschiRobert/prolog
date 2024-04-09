@@ -111,13 +111,98 @@ dividelist(X, Y, Z):-
   divideleft(X, Y, Z).
 
 %flatten(List, FlatList) true if FlatList is List without annidated lists inside
-add(X, [], [X]).
-add(X, [H | T], [X, H | T]).
+not(P):-
+  P, !, fail;
+  true.
 
-flatten([], []).
-flatten([X], X).
-flatten([H|T],  [H1|T1]):-
-  flatten([H], H1),
+%concat(List1, List2, ResultList)
+conc([], Y, Y).
+conc([H | T], L2, [H | Z]):-
+  conc(T, L2, Z).
+
+%X is not a list
+flatten([X], [X]):-
+  not(is_list(X)), !.
+flatten([X], Y):-
+  is_list(X),
+  flatten(X, Y).
+flatten([H|T], [H|T1]):-
+  not(is_list(H)),
   flatten(T, T1).
+flatten([H|T], List):-
+  flatten(H, H1),
+  flatten(T, T1),
+  conc(H1, T1, List).
 
+%operators
+:-op(300, xfx, plays).
+:-op(200, xfy, and).
+jimmy plays football and squash.
 
+:-op(100, fx, the).
+:-op(200, xfx, of).
+:-op(300, xfy, was).
+diana was the secretary of the department.
+
+%max(X, Y, Max) true if Max is The max between X and Y
+max(X, Y, X):-
+  X >= Y.
+max(X, Y, Y):-
+  Y > X.
+
+%maxList(List, Max) true if Max is the bigger item in List
+
+maxList([X, Y], P):-
+  max(X, Y, P).
+
+maxList([H|T], P):-
+  maxList(T, P1),
+  max(H, P1, P).
+
+%sumList(List, Sum) true if Sum is the sum of all elements in List
+
+sumList([X], X).
+sumList([H|T], Sum):-
+  sumList(T, Sum1),
+  Sum is H + Sum1.
+
+%ordered(List) true if List is an ordered list of numbers
+ordered([X, Y]):-
+  X =< Y.
+ordered([H1, H2|T]):-
+  H1 =< H2,
+  ordered([H2|T]).
+%subSum(Set, Sum, SubSet) true if Set is a list of numbers, SubSet is a subset of Set and the sum of all the elements in Subset is Sum
+subSum([], 0, []).
+subSum([H|T], Sum, [H|T1]):-
+  subSum(T, Sum1, T1),
+  Sum is Sum1 + H.
+subSum([H|T], Sum, List):-
+  subSum(T, Sum, List).
+
+%betwen(N1, N2, X) generates all the integers that N1 <= X <= N1
+between(X, X, X).
+between(X, Y, Z):-
+  X1 is X + 1,
+  Y is Y - 1,
+  between(X1, Y1, Z).
+%compress(List, Compressed) remove all consecutive s duplicate
+compress([],[]).
+compress([X],[X]).
+
+compress([X,X|Xs],Zs):-
+  compress([X|Xs],Zs).
+
+compress([X,Y|Ys],[X|Zs]):-
+  X \= Y,
+  compress([Y|Ys],Zs).
+%P09 pack(List, Packed) If a list contains repeated elements they should be placed in separate sublists.
+transfer([X], [], [X]).
+transfer([H1, H2|T], [H2|T], [H1]):-
+  H1 \= H2.
+transfer([H1, H2|T], Z, [H1|T1]):-
+  transfer([H2|T], Z, T1).
+pack([], []).
+pack(List, [H1|T1]):-
+  transfer(List, T, H1),!,
+  pack(T, T1).
