@@ -70,3 +70,54 @@ palindroma(Pal):-
 shift([X], [X]).
 shift([H|T], T2):-
   append(H, T, T2).
+
+%translate(List1, List2) true if List2 is List1 translated from numbers to characters
+means(0, zero).
+means(1, one).
+means(2, two).
+means(3, three).
+means(4, four).
+means(5, five).
+means(6, six).
+means(7, seven).
+means(8, eight).
+means(9, nine).
+
+translate([], []).
+translate(X, Y):-
+  means(X, Y).
+
+translate([H|T], [H1|T1]):-
+  translate(H, H1),
+  translate(T, T1).
+
+%subset(Set, Subset) true if Subset is a generic Subset of Set
+subset([], []).
+subset([H|T], [H|T1]):-
+  subset(T, T1).
+subset([_|T], Y):-
+  subset(T, Y).
+
+%dividelist(List, List1, List2) true if the concatenation between List1 and List 2 gives List and List1
+%and List2 have nearly the same amount of elements
+divideright([X], [], [X]).
+divideright([H|T], [H|T1], Y):-
+  divideleft(T, T1, Y).
+
+divideleft([X], [X], []).
+divideleft([H|T], Y, [H|T2]):-
+  divideright(T, Y, T2).
+dividelist(X, Y, Z):-
+  divideleft(X, Y, Z).
+
+%flatten(List, FlatList) true if FlatList is List without annidated lists inside
+add(X, [], [X]).
+add(X, [H | T], [X, H | T]).
+
+flatten([], []).
+flatten([X], X).
+flatten([H|T],  [H1|T1]):-
+  flatten([H], H1),
+  flatten(T, T1).
+
+
